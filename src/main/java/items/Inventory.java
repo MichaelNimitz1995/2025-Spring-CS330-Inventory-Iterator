@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -96,7 +97,7 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
     public boolean isFull()
     {
         // Replace the next line
-        return this.slots.size() == 0;
+        return this.totalSlots() == this.utilizedSlots();
     }
 
     /**
@@ -119,8 +120,18 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
      */
     public ItemStack findMatchingItemStack(ItemStack key)
     {
-        // Adapt the logic from Assignment 1
+        Iterator<ItemStack> it = this.iterator();
 
+        while(it.hasNext())
+        {
+            ItemStack t = it.next();
+            if (t.equals(key)) 
+            {
+                return t;
+            }
+        }
+
+        // no match was found
         return null;
     }
 
@@ -170,6 +181,11 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
         Inventory copy = new Inventory(this.totalSlots());
 
         // Add the missing copy logic (loop)
+        Iterator<ItemStack> it = this.iterator();
+        while(it.hasNext())
+        {
+            copy.addItems(it.next());
+        }
 
         return copy;
     }
@@ -217,6 +233,14 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
         strBld.append(summaryLine);
 
         // Add the missing loop
+        Iterator<ItemStack> it = this.iterator();
+
+        while (it.hasNext()) 
+        {
+            String itemLine = String.format("  %s%n", it.next());
+            strBld.append(itemLine);
+
+        }
 
         return strBld.toString();
     }
